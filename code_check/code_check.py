@@ -72,6 +72,7 @@ class CodeCheck():
             #timeout(self.time_out)(self.agent.go)(np.copy(chessboard))
         except Exception:
             self.errormsg = "Error:" + traceback.format_exc()
+            print(self.errormsg)
             return False
         return True
     
@@ -106,6 +107,7 @@ class CodeCheck():
         chessboard[0, 0:4] = -1
         chessboard[1, 0:4] = 1
         if not self.__check_result(chessboard, [[0, 4]]):
+            print(1)
             return False
     
         # defense 5 inline
@@ -114,6 +116,7 @@ class CodeCheck():
         chessboard[0, 7] = -1
         chessboard[1, 1:4] = 1
         if not self.__check_result(chessboard, [[1, 4], [1, 0]]):
+            print(2)
             return False
     
         # two three
@@ -123,6 +126,7 @@ class CodeCheck():
         chessboard[1, 6:8] = 1
         chessboard[2:4, 8] = 1
         if not self.__check_result(chessboard, [[1, 3]]):
+            print(3)
             return False
     
         # defense
@@ -132,6 +136,7 @@ class CodeCheck():
         chessboard[1, 6:8] = 1
         chessboard[2:4, 8] = 1
         if not self.__check_result(chessboard, [[0, 8], [1, 8], [4, 8], [5, 8], [1, 5], [1, 9], [1, 10]]):
+            print(4)
             return False
 
         return True
