@@ -96,6 +96,7 @@ def click(event):
 def giveUp():
     messagebox.showinfo("Score", "You Lose!")
     data.ai_score = 100
+    sys.exit()
     pass
 
 
