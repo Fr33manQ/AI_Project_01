@@ -6,7 +6,7 @@
 #    By: Corey <390583019@qq.com>                   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/26 20:48:03 by Corey             #+#    #+#              #
-#    Updated: 2018/10/15 17:36:58 by Corey            ###   ########.fr        #
+#    Updated: 2018/10/16 01:09:14 by Corey            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,14 +22,12 @@ COLOR_WHITE = 1
 COLOR_NONE = 0
 DEPTH = 0  # search depth
 
-
-
 black_score = {
     '22222': 50000,
     '022220': 4320,
     '02220': 720,
-    '022020': 720,
-    '020220': 720,
+    '022020': 700,
+    '020220': 700,
     '22220': 800,
     '02222': 800,
     '22022': 720,
@@ -38,18 +36,21 @@ black_score = {
     '202220': 800,
     '20222': 720,
     '002200': 120,
-    '002020': 120,
-    '020200': 120,
-    '000200': 20,
-    '002000': 20
+    '02020': 100,
+    '00200':20
+    # '002200': 120,
+    # '002020': 120,
+    # '020200': 120,
+    # '000200': 20,
+    # '002000': 20
 }
 
 white_score = {
     '11111': 50000,
     '011110': 4320,
     '01110': 720,
-    '011010': 720,
-    '010110': 720,
+    '011010': 700,
+    '010110': 700,
     '11110': 800,
     '01111': 800,
     '11011': 720,
@@ -58,10 +59,13 @@ white_score = {
     '101110': 800,
     '10111': 720,
     '001100': 120,
-    '001010': 120,
-    '010100': 120,
-    '000100': 20,
-    '001000': 20
+    '01010': 100,
+    '00100': 20
+    # '001100': 120,
+    # '001010': 120,
+    # '010100': 120,
+    # '000100': 20,
+    # '001000': 20
     # '001110': 719,
 }
 
@@ -76,7 +80,6 @@ class AI():
         # the position list. System will get the end of candidate_list as decision .
         self.candidate_list = []
 
-        # print('self.color: ', self.color)
         pass
 
     def go(self, chessboard):
@@ -93,17 +96,22 @@ class AI():
         # the list of every empty point's score     
         idx_my_score_list = [evaluate(idxs, True, chessboard) for idxs in idx]
         idx_enemy_score_list = [evaluate(idxs, False, chessboard) for idxs in idx]
-
+        
         if max(idx_my_score_list) >= max(idx_enemy_score_list):
             score_dict = dict(zip(list(zip(idx_my_score_list,idx_enemy_score_list)),idx))   
         else:
             score_dict = dict(zip(list(zip(idx_enemy_score_list,idx_my_score_list)),idx))
         new_pos = score_dict[max(score_dict)]
-
+        
         print('final_idx: ', new_pos)
         self.candidate_list.append(tuple(new_pos))
         run_time = time.time() - start_time
         print('Run time: ', run_time,'s')
+
+        # for debug
+        # print('my score list: ', idx_my_score_list)
+        # print('enemy score list: ', idx_enemy_score_list)
+        # print(score_dict)
         pass
 
 def evaluate(node,chessboard):
@@ -149,6 +157,7 @@ def evaluate(node, black, chessboard):
     arc_diagonal = ''.join(str(arc_diagonal_item)
                            for arc_diagonal_item in arc_diagonal_list)
 
+    # for debug
     # if(horizonal):
     #     print('horizonal: ', horizonal)
     # if(vertical):
@@ -184,3 +193,16 @@ def MinMax(node, depth, isAI):
     for subnode in node:
         value = MinMax(subnode, depth-1, not isAI)
         score = max(score, value) if isAI else min(score, value)
+
+class starting():
+    """ Starting Library """
+
+    def __init__(self):
+        pass
+    def starting_list(index):
+        chessboard 
+        pass
+    pass
+
+
+
