@@ -52,6 +52,10 @@ class CodeCheck():
             self.errormsg = "Your code is too weak, fail to pass base test."
             return False
 
+
+        if not self.__user_test():
+            self.errormsg = 'can not pass user test.'
+            return False
         return True
 
 
@@ -139,4 +143,29 @@ class CodeCheck():
             print(4)
             return False
 
+        return True
+
+    def __user_test(self):
+        # testcase 1
+        chessboard = np.zeros((self.chessboard_size, self.chessboard_size), dtype=np.int)
+        chessboard[6,6] = chessboard[5,8] = chessboard[7:9,9] = -1
+        chessboard[8,7] = chessboard[9,6] = chessboard[9,10:12] = chessboard[10,7:9] = -1
+        chessboard[11,5] = chessboard[11,7] = chessboard[10,13] = chessboard[11,11] = chessboard[12,9:11] = -1
+        chessboard[6:9,8] = chessboard[7,7] = chessboard[8,6] = chessboard[9,7:10] = 1
+        chessboard[10,6] = chessboard[10,9:13] = chessboard[11,8:10] = chessboard[12,8] = 1
+        if not self.__check_result(chessboard,[[9,5],[5,9]]):
+            print('user1')
+            return False
+
+
+        # testcase 2
+        chessboard = np.zeros((self.chessboard_size, self.chessboard_size), dtype=np.int)
+        chessboard[4:6,4] = chessboard[4, 6:8] = chessboard[2,10] = chessboard[5,9] = -1 
+        chessboard[6,10] = chessboard[6:8, 5] = chessboard[8,7] = chessboard[9,6] = -1
+        chessboard[9,9] = chessboard[10,4] = -1
+        chessboard[3,9] = chessboard[4,8] = chessboard[5,5:8] = chessboard[6,6:10] = 1
+        chessboard[7,6:9] = chessboard[8,6] = chessboard[9,5] = 1
+        if not self.__check_result(chessboard,[[4,5],[8,9]]):
+            print('user2')
+            return False
         return True
