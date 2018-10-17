@@ -35,14 +35,10 @@ Alpha-Beta剪枝
 （在ai平台上不用自己写判断。）
 
 
-
-
-
-
 # 下棋思路
 ## 打分思路
 
-每次都遍历整个棋盘，寻找到：令我方决策分最高的点，最高分为`max(my_score)`；令敌方最高分的点，最高分为`max(enemy_score)`。一个点的得分为`max(my_score) + max(enemy_score)`
+每次都遍历整个棋盘，寻找到：令我方决策分最高的点，最高分为`max(my_score)`；令敌方最高分的点，最高分为`max(enemy_score)`。
 比较两个分数。如果`max(my_score)` > `max(enemy_score)`，则选择进攻。下`max(my_score)`的点。如果有多个点`my_score`相同，则选其中`enemy_score`最大的点。
 反之，则选择防守。下`enemy_score`最大的点。如果有多个相同，则选择`my_score`最大的点。
 
@@ -50,7 +46,6 @@ Alpha-Beta剪枝
 
 ## 打分方法
 在棋盘空的位置 -> `chessboard == COLOR_NONE` 预下棋。对该位置四个方向上，各取13个格子。判断这13个（加上中心格子）形成的棋型是什么，进行打分。取这个位置的分`idx_score`为4个方向的`score`加起来的值。
-然后在这些空的位置中取`idx_score`最高分的。
 
 ## 具体打分
 

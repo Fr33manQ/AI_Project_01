@@ -6,7 +6,7 @@
 #    By: Corey <390583019@qq.com>                   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/26 20:48:03 by Corey             #+#    #+#              #
-#    Updated: 2018/10/16 01:09:14 by Corey            ###   ########.fr        #
+#    Updated: 2018/10/17 14:23:52 by Corey            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,6 @@
 import numpy as np
 import random
 import time
-from collections import Counter
 
 COLOR_BLACK = 2
 COLOR_WHITE = 1
@@ -25,9 +24,9 @@ DEPTH = 0  # search depth
 black_score = {
     '22222': 50000,
     '022220': 4320,
-    '02220': 720,
-    '022020': 700,
-    '020220': 700,
+    '02220': 800,
+    '022020': 720,
+    '020220': 720,
     '22220': 800,
     '02222': 800,
     '22022': 720,
@@ -38,19 +37,14 @@ black_score = {
     '002200': 120,
     '02020': 100,
     '00200':20
-    # '002200': 120,
-    # '002020': 120,
-    # '020200': 120,
-    # '000200': 20,
-    # '002000': 20
 }
 
 white_score = {
     '11111': 50000,
     '011110': 4320,
-    '01110': 720,
-    '011010': 700,
-    '010110': 700,
+    '01110': 800,
+    '011010': 720,
+    '010110': 720,
     '11110': 800,
     '01111': 800,
     '11011': 720,
@@ -79,17 +73,26 @@ class AI():
         self.time_out = time_out  # the limit time
         # the position list. System will get the end of candidate_list as decision .
         self.candidate_list = []
-
         pass
 
     def go(self, chessboard):
-        chessboard[chessboard<0] = 2
         print('chessboard: ')
         print(chessboard)
+        chessboard[chessboard<0] = 2
+        start = starting(chessboard)
         self.candidate_list.clear()
         start_time = time.time()
 
         # algorithm here
+        # staring library
+        if start.starting_list():
+            new_pos = start.starting_list()
+            self.candidate_list.append(new_pos)
+            print('final_idx: ', new_pos)
+            run_time = time.time() - start_time
+            print('Run time: ', run_time, 's')
+            return
+
         idx = np.where(chessboard == COLOR_NONE)
         idx = list(zip(idx[0], idx[1]))
 
@@ -104,7 +107,7 @@ class AI():
         new_pos = score_dict[max(score_dict)]
         
         print('final_idx: ', new_pos)
-        self.candidate_list.append(tuple(new_pos))
+        self.candidate_list.append(new_pos)
         run_time = time.time() - start_time
         print('Run time: ', run_time,'s')
 
@@ -113,13 +116,6 @@ class AI():
         # print('enemy score list: ', idx_enemy_score_list)
         # print(score_dict)
         pass
-
-def evaluate(node,chessboard):
-    my_score = single_evaluate(node,True,chessboard)
-    enemy_score = single_evaluate(node,False,chessboard)
-    # print(my_score+enemy_score)
-    return my_score+enemy_score
-    pass
 
 def evaluate(node, black, chessboard):
     chessboard[node[0], node[1]] = 2 if black else 1
@@ -154,8 +150,7 @@ def evaluate(node, black, chessboard):
     horizonal = ''.join(str(horizonal_item) for horizonal_item in horizonal_list)
     vertical = ''.join(str(vertical_item) for vertical_item in vertical_list)
     diagonal = ''.join(str(diagonal_item) for diagonal_item in diagonal_list)
-    arc_diagonal = ''.join(str(arc_diagonal_item)
-                           for arc_diagonal_item in arc_diagonal_list)
+    arc_diagonal = ''.join(str(arc_diagonal_item) for arc_diagonal_item in arc_diagonal_list)
 
     # for debug
     # if(horizonal):
@@ -175,32 +170,64 @@ def evaluate(node, black, chessboard):
             idx_score += evaluate_score[shape]
             # print('2 ', shape, 'score: ', evaluate_score[shape])
         if shape in diagonal:
-            idx_score += evaluate_score[shape]
+            idx_score += (evaluate_score[shape]+20)
             # print('3 ', shape, 'score: ', evaluate_score[shape])
         if shape in arc_diagonal:
-            idx_score += evaluate_score[shape]
+            idx_score += (evaluate_score[shape]+20)
             # print('4 ', shape, 'score: ', evaluate_score[shape])
     # print(idx_score)
     chessboard[node[0], node[1]] = 0
     return idx_score
+
+def evaluate_whole(node, black, chessboard):
+    chessboard[node[0], node[1]] = 2 if black else 1
+    evaluate_score = black_score if black else white_score
+    whole_score = 0
+    for i in range(15):
+        horizonal = ''.join(str(item) for item in chessboard[i, :])
+        vertical = ''.join(str(item) for item in chessboard[:, i])
+        for shape in evaluate_score.keys(): 
+            if shape in horizonal:
+                whole_score += evaluate_score[shape]
+            if shape in vertical:
+                whole_score += evaluate_score[shape]
+
+
     pass
 
 
-def MinMax(node, depth, isAI):
-    if depth == 0:
-        return evaluate(node, isAI)
-    score = float('-inf') if isAI else float('inf')
-    for subnode in node:
-        value = MinMax(subnode, depth-1, not isAI)
-        score = max(score, value) if isAI else min(score, value)
+# def MinMax(node, depth, isAI):
+#     if depth == 0:
+#         return evaluate(node, isAI)
+#     score = float('-inf') if isAI else float('inf')
+#     for subnode in node:
+#         value = MinMax(subnode, depth-1, not isAI)
+#         score = max(score, value) if isAI else min(score, value)
 
 class starting():
     """ Starting Library """
 
-    def __init__(self):
+    def __init__(self,chessboard):
+        self.chessboard = chessboard
+        self.chessboard[self.chessboard < 0] = 2
+        self.return_pos = ()
         pass
-    def starting_list(index):
-        chessboard 
+    def starting_list(self):
+        if len(self.chessboard[self.chessboard != 0]) == 0:
+            self.return_pos = (7, 7)
+            return self.return_pos
+        if len(self.chessboard[self.chessboard == 1]) == COLOR_WHITE and len(self.chessboard[self.chessboard == COLOR_BLACK]) == 1:
+            black_point = np.where(self.chessboard == COLOR_BLACK)
+            black_point_x, black_point_y = black_point[0][0], black_point[1][0]
+            white_point = np.where(self.chessboard == COLOR_WHITE)
+            white_point_x, white_point_y = white_point[0][0], white_point[1][0]
+            # huayue
+            if ((black_point_x - white_point_x)**2 + (black_point_y - white_point_y)**2 == 1):
+                self.return_pos = (white_point_x, white_point_y + 1) if black_point_y == white_point_y else (black_point_x-1, white_point_y)
+            # puyue
+            if ((black_point_x - white_point_x)**2 + (black_point_y - white_point_y)**2 == 2):
+                self.return_pos= (black_point_x+1,white_point_y) if black_point_x > white_point_x else (black_point_x-1, white_point_y)
+            return self.return_pos
         pass
     pass
 
