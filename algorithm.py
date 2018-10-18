@@ -6,7 +6,7 @@
 #    By: Corey <390583019@qq.com>                   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/26 20:48:03 by Corey             #+#    #+#              #
-#    Updated: 2018/10/15 17:36:58 by Corey            ###   ########.fr        #
+#    Updated: 2018/10/18 10:20:16 by Corey            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,53 +15,51 @@
 import numpy as np
 import random
 import time
-from collections import Counter
 
 COLOR_BLACK = 2
 COLOR_WHITE = 1
 COLOR_NONE = 0
 DEPTH = 0  # search depth
 
-
-
 black_score = {
     '22222': 50000,
     '022220': 4320,
-    '02220': 720,
+    '02220': 800,
     '022020': 720,
     '020220': 720,
     '22220': 800,
     '02222': 800,
     '22022': 720,
-    '022202': 800,
-    '22202': 720,
-    '202220': 800,
-    '20222': 720,
+    '022202': 720,
+    '22202': 700,
+    '202220': 720,
+    #'20222': 720,
     '002200': 120,
-    '002020': 120,
-    '020200': 120,
-    '000200': 20,
-    '002000': 20
+    '02020': 100,
+    '00200':20
 }
 
 white_score = {
     '11111': 50000,
     '011110': 4320,
-    '01110': 720,
+    '01110': 800,
     '011010': 720,
     '010110': 720,
     '11110': 800,
     '01111': 800,
     '11011': 720,
-    '011101': 800,
-    '11101': 720,
-    '101110': 800,
-    '10111': 720,
+    '011101': 720,
+    '11101': 700,
+    '101110': 720,
+    #'10111': 720,
     '001100': 120,
-    '001010': 120,
-    '010100': 120,
-    '000100': 20,
-    '001000': 20
+    '01010': 100,
+    '00100': 20
+    # '001100': 120,
+    # '001010': 120,
+    # '010100': 120,
+    # '000100': 20,
+    # '001000': 20
     # '001110': 719,
 }
 
@@ -75,43 +73,49 @@ class AI():
         self.time_out = time_out  # the limit time
         # the position list. System will get the end of candidate_list as decision .
         self.candidate_list = []
-
-        # print('self.color: ', self.color)
         pass
 
     def go(self, chessboard):
-        chessboard[chessboard<0] = 2
         print('chessboard: ')
         print(chessboard)
+        chessboard[chessboard<0] = 2
+        start = starting(chessboard)
         self.candidate_list.clear()
         start_time = time.time()
 
         # algorithm here
+        # staring library
+        if start.starting_list():
+            new_pos = start.starting_list()
+            self.candidate_list.append(new_pos)
+            print('final_idx: ', new_pos)
+            run_time = time.time() - start_time
+            print('Run time: ', run_time, 's')
+            return
+
         idx = np.where(chessboard == COLOR_NONE)
         idx = list(zip(idx[0], idx[1]))
 
         # the list of every empty point's score     
         idx_my_score_list = [evaluate(idxs, True, chessboard) for idxs in idx]
         idx_enemy_score_list = [evaluate(idxs, False, chessboard) for idxs in idx]
-
-        if max(idx_my_score_list) >= max(idx_enemy_score_list):
+        
+        if max(idx_my_score_list) >= max(idx_enemy_score_list) or max(idx_my_score_list) >= 50000 or (max(idx_my_score_list) >= 4320 and max(idx_enemy_score_list) < 50000) :
             score_dict = dict(zip(list(zip(idx_my_score_list,idx_enemy_score_list)),idx))   
         else:
             score_dict = dict(zip(list(zip(idx_enemy_score_list,idx_my_score_list)),idx))
         new_pos = score_dict[max(score_dict)]
-
+        
         print('final_idx: ', new_pos)
-        self.candidate_list.append(tuple(new_pos))
+        self.candidate_list.append(new_pos)
         run_time = time.time() - start_time
         print('Run time: ', run_time,'s')
-        pass
 
-def evaluate(node,chessboard):
-    my_score = single_evaluate(node,True,chessboard)
-    enemy_score = single_evaluate(node,False,chessboard)
-    # print(my_score+enemy_score)
-    return my_score+enemy_score
-    pass
+        # for debug
+        # print('my score list: ', idx_my_score_list)
+        # print('enemy score list: ', idx_enemy_score_list)
+        # print(score_dict)
+        pass
 
 def evaluate(node, black, chessboard):
     chessboard[node[0], node[1]] = 2 if black else 1
@@ -146,9 +150,9 @@ def evaluate(node, black, chessboard):
     horizonal = ''.join(str(horizonal_item) for horizonal_item in horizonal_list)
     vertical = ''.join(str(vertical_item) for vertical_item in vertical_list)
     diagonal = ''.join(str(diagonal_item) for diagonal_item in diagonal_list)
-    arc_diagonal = ''.join(str(arc_diagonal_item)
-                           for arc_diagonal_item in arc_diagonal_list)
+    arc_diagonal = ''.join(str(arc_diagonal_item) for arc_diagonal_item in arc_diagonal_list)
 
+    # for debug
     # if(horizonal):
     #     print('horizonal: ', horizonal)
     # if(vertical):
@@ -166,21 +170,64 @@ def evaluate(node, black, chessboard):
             idx_score += evaluate_score[shape]
             # print('2 ', shape, 'score: ', evaluate_score[shape])
         if shape in diagonal:
-            idx_score += evaluate_score[shape]
+            idx_score += (evaluate_score[shape]+20)
             # print('3 ', shape, 'score: ', evaluate_score[shape])
         if shape in arc_diagonal:
-            idx_score += evaluate_score[shape]
+            idx_score += (evaluate_score[shape]+20)
             # print('4 ', shape, 'score: ', evaluate_score[shape])
     # print(idx_score)
     chessboard[node[0], node[1]] = 0
     return idx_score
+
+def evaluate_whole(node, black, chessboard):
+    chessboard[node[0], node[1]] = 2 if black else 1
+    evaluate_score = black_score if black else white_score
+    whole_score = 0
+    for i in range(15):
+        horizonal = ''.join(str(item) for item in chessboard[i, :])
+        vertical = ''.join(str(item) for item in chessboard[:, i])
+        for shape in evaluate_score.keys(): 
+            if shape in horizonal:
+                whole_score += evaluate_score[shape]
+            if shape in vertical:
+                whole_score += evaluate_score[shape]
+
+
     pass
 
 
-def MinMax(node, depth, isAI):
-    if depth == 0:
-        return evaluate(node, isAI)
-    score = float('-inf') if isAI else float('inf')
-    for subnode in node:
-        value = MinMax(subnode, depth-1, not isAI)
-        score = max(score, value) if isAI else min(score, value)
+# def MinMax(node, depth, isAI):
+#     if depth == 0:
+#         return evaluate(node, isAI)
+#     score = float('-inf') if isAI else float('inf')
+#     for subnode in node:
+#         value = MinMax(subnode, depth-1, not isAI)
+#         score = max(score, value) if isAI else min(score, value)
+
+class starting():
+    """ Starting Library """
+
+    def __init__(self,chessboard):
+        self.chessboard = chessboard
+        self.chessboard[self.chessboard < 0] = 2
+        self.return_pos = ()
+        pass
+    def starting_list(self):
+        if len(self.chessboard[self.chessboard != 0]) == 0:
+            self.return_pos = (7, 7)
+            return self.return_pos
+        if len(self.chessboard[self.chessboard == 1]) == COLOR_WHITE and len(self.chessboard[self.chessboard == COLOR_BLACK]) == 1:
+            black_point = np.where(self.chessboard == COLOR_BLACK)
+            black_point_x, black_point_y = black_point[0][0], black_point[1][0]
+            white_point = np.where(self.chessboard == COLOR_WHITE)
+            white_point_x, white_point_y = white_point[0][0], white_point[1][0]
+            # huayue
+            if ((black_point_x - white_point_x)**2 + (black_point_y - white_point_y)**2 == 1):
+                self.return_pos = (white_point_x, white_point_y + 1) if black_point_y == white_point_y else (black_point_x-1, white_point_y)
+            # puyue
+            if ((black_point_x - white_point_x)**2 + (black_point_y - white_point_y)**2 == 2):
+                self.return_pos= (black_point_x+1,white_point_y) if black_point_x > white_point_x else (black_point_x-1, white_point_y)
+            return self.return_pos
+        pass
+    pass
+

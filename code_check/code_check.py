@@ -160,12 +160,31 @@ class CodeCheck():
 
         # testcase 2
         chessboard = np.zeros((self.chessboard_size, self.chessboard_size), dtype=np.int)
-        chessboard[4:6,4] = chessboard[4, 6:8] = chessboard[2,10] = chessboard[5,9] = -1 
-        chessboard[6,10] = chessboard[6:8, 5] = chessboard[8,7] = chessboard[9,6] = -1
-        chessboard[9,9] = chessboard[10,4] = -1
-        chessboard[3,9] = chessboard[4,8] = chessboard[5,5:8] = chessboard[6,6:10] = 1
-        chessboard[7,6:9] = chessboard[8,6] = chessboard[9,5] = 1
-        if not self.__check_result(chessboard,[[4,5],[8,9]]):
+        chessboard[7,7:9] = 1
+        if not self.__check_result(chessboard,[[7,6],[7,9]]):
             print('user2')
+            return False
+
+        
+        # testcase 3
+        chessboard = np.zeros((self.chessboard_size, self.chessboard_size), dtype=np.int)
+        if not self.__check_result(chessboard,[[7,7]]):
+            print('user3')
+            return False
+
+        # testcase 4
+        # puyue
+        chessboard1 = np.zeros((self.chessboard_size, self.chessboard_size), dtype=np.int)
+        chessboard1[7,7] = -1
+        chessboard1[8,8] = 1
+        if not self.__check_result(chessboard1,[[6,8]]):
+            print('user4 - puyue')
+            return False
+        # huayue
+        chessboard2 = np.zeros((self.chessboard_size, self.chessboard_size), dtype=np.int)
+        chessboard2[7,7] = -1
+        chessboard2[6,7] = 1
+        if not self.__check_result(chessboard2, [[6, 8],[6, 6]]):
+            print('user4 - huayue') 
             return False
         return True
