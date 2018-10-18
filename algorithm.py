@@ -6,7 +6,7 @@
 #    By: Corey <390583019@qq.com>                   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/26 20:48:03 by Corey             #+#    #+#              #
-#    Updated: 2018/10/17 14:23:52 by Corey            ###   ########.fr        #
+#    Updated: 2018/10/18 10:20:16 by Corey            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,10 +30,10 @@ black_score = {
     '22220': 800,
     '02222': 800,
     '22022': 720,
-    '022202': 800,
-    '22202': 720,
-    '202220': 800,
-    '20222': 720,
+    '022202': 720,
+    '22202': 700,
+    '202220': 720,
+    #'20222': 720,
     '002200': 120,
     '02020': 100,
     '00200':20
@@ -48,10 +48,10 @@ white_score = {
     '11110': 800,
     '01111': 800,
     '11011': 720,
-    '011101': 800,
-    '11101': 720,
-    '101110': 800,
-    '10111': 720,
+    '011101': 720,
+    '11101': 700,
+    '101110': 720,
+    #'10111': 720,
     '001100': 120,
     '01010': 100,
     '00100': 20
@@ -100,7 +100,7 @@ class AI():
         idx_my_score_list = [evaluate(idxs, True, chessboard) for idxs in idx]
         idx_enemy_score_list = [evaluate(idxs, False, chessboard) for idxs in idx]
         
-        if max(idx_my_score_list) >= max(idx_enemy_score_list):
+        if max(idx_my_score_list) >= max(idx_enemy_score_list) or max(idx_my_score_list) >= 50000 or (max(idx_my_score_list) >= 4320 and max(idx_enemy_score_list) < 50000) :
             score_dict = dict(zip(list(zip(idx_my_score_list,idx_enemy_score_list)),idx))   
         else:
             score_dict = dict(zip(list(zip(idx_enemy_score_list,idx_my_score_list)),idx))
@@ -230,6 +230,4 @@ class starting():
             return self.return_pos
         pass
     pass
-
-
 

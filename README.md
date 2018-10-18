@@ -6,12 +6,12 @@
 
 
 
-|   Service  | Master   |  Develop  |
-| --------   | -----:   | :----: |
+|   Service  |  Master  |  Develop  |
+| :------:   | :-----:  | :-------: |
 |   Build    | ![Develop Build](https://img.shields.io/badge/build-passing-brightgreen.svg)|![Develop Build](https://img.shields.io/badge/build-passing-brightgreen.svg) |
-|  Platform  | ![Python Version](https://img.shields.io/badge/python-3.6-blue.svg)    |   ![Python Version](https://img.shields.io/badge/python-3.6-blue.svg)    |
-|  Download  | ![Github All Releases](https://img.shields.io/badge/downloads-2.99k-brightgreen.svg) | ![Github All Releases](https://img.shields.io/badge/downloads%20-2.99k-brightgreen.svg)     |
-|  Release   | ![release](https://img.shields.io/badge/release-v1.1-blue.svg)  | ![release](https://img.shields.io/badge/release-v1.2-blue.svg)    |
+|  Platform  | ![Python Version](https://img.shields.io/badge/python-3.6-blue.svg)  |   ![Python Version](https://img.shields.io/badge/python-3.6-blue.svg)    |
+|  Download  | ![Github All Releases](https://img.shields.io/badge/downloads-717K-brightgreen.svg) | ![Github All Releases](https://img.shields.io/badge/downloads%20-717K-brightgreen.svg)     |
+|  Release   | ![release](https://img.shields.io/badge/release-v2.0-blue.svg)  | ![release](https://img.shields.io/badge/release-v2.1-blue.svg)    |
 
 
 # AI_Project_01
@@ -56,16 +56,15 @@ Alpha-Beta剪枝
 black_score = {
     '22222': 50000,
     '022220': 4320,
-    '02220': 720,
-    '022020': 700,
-    '020220': 700,
+    '02220': 800,
+    '022020': 720,
+    '020220': 720,
     '22220': 800,
     '02222': 800,
     '22022': 720,
-    '022202': 800,
-    '22202': 720,
-    '202220': 800,
-    '20222': 720,
+    '022202': 720,
+    '22202': 700,
+    '202220': 720,
     '002200': 120,
     '02020': 100,
     '00200':20
@@ -75,16 +74,15 @@ black_score = {
 white_score = {
     '11111': 50000,
     '011110': 4320,
-    '01110': 720,
-    '011010': 700,
-    '010110': 700,
+    '01110': 800,
+    '011010': 720,
+    '010110': 720,
     '11110': 800,
     '01111': 800,
     '11011': 720,
-    '011101': 800,
-    '11101': 720,
-    '101110': 800,
-    '10111': 720,
+    '011101': 720,
+    '11101': 700,
+    '101110': 720,
     '001100': 120,
     '01010': 100,
     '00100': 20
